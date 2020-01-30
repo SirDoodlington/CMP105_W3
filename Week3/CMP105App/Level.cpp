@@ -32,21 +32,6 @@ void Level::update(float dt)
 
 	if (direction == 0)
 	{
-		if (rectangle.getPosition().x + movement >= window->getSize().x - rectangle.getSize().x)
-		{
-			direction = 1;
-		}
-	}
-	else
-	{
-		if (rectangle.getPosition().x - movement <= 0)
-		{
-			direction = 0;
-		}
-	}
-
-	if (direction == 0)
-	{
 		rectangle.setPosition(rectangle.getPosition().x + movement, rectangle.getPosition().y);
 		if (rectangle.getPosition().x >= window->getSize().x - rectangle.getSize().x)
 		{
