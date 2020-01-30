@@ -26,9 +26,14 @@ private:
 
 	sf::RectangleShape rectangle;
 	sf::CircleShape playerCircle;
+	sf::CircleShape theBall;
 	float speed;
 	float movement;
 	int direction;
 	int circHori;
 	int circVert;
+
+	int ballDir;
+	float ballSpeed;
+	float ballMove;
 };

@@ -19,6 +19,13 @@ Level::Level(sf::RenderWindow* hwnd, Input* in)
 
 	circVert = 0;
 	circHori = 0;
+
+	theBall.setRadius(30);
+	theBall.setFillColor(sf::Color::Cyan);
+	theBall.setPosition(300, 400);
+
+	ballDir = 0;
+	ballSpeed = 200;
 }
 
 Level::~Level()
@@ -53,12 +60,21 @@ void Level::handleInput(float dt)
 	{
 		circHori = 0;
 	}
+
+	if (input->isKeyDown(sf::Keyboard::Equal))
+	{
+		ballSpeed++;
+	}
+	if (input->isKeyDown(sf::Keyboard::Hyphen) && ballSpeed > 0)
+	{
+		ballSpeed--;
+	}
 }
 
 // Update game objects
 void Level::update(float dt)
 {
-	float movement = speed * dt;
+	movement = speed * dt;
 
 	//Rectangle movement
 	if (direction == 0)
@@ -118,6 +134,68 @@ void Level::update(float dt)
 	{
 		playerCircle.setPosition(sf::Vector2f(playerCircle.getPosition().x, window->getSize().y - 2*playerCircle.getRadius()));
 	}
+
+	//Controlling the ball
+	ballMove = ballSpeed * dt;
+
+	switch (ballDir)
+	{
+	case 0://Down Right
+		theBall.setPosition(sf::Vector2f(theBall.getPosition().x + ballMove, theBall.getPosition().y + ballMove));
+		if (theBall.getPosition().x + 2*theBall.getRadius() > window->getSize().x)
+		{
+			ballDir = 1;
+			theBall.setPosition(sf::Vector2f(window->getSize().x - 2*theBall.getRadius(), theBall.getPosition().y));
+		}
+		if (theBall.getPosition().y + 2*theBall.getRadius() > window->getSize().y)
+		{
+			ballDir = 3;
+			theBall.setPosition(sf::Vector2f(theBall.getPosition().x, window->getSize().y - 2*theBall.getRadius()));
+		}
+		break;
+
+	case 1://Down Left
+		theBall.setPosition(sf::Vector2f(theBall.getPosition().x - ballMove, theBall.getPosition().y + ballMove));
+		if (theBall.getPosition().x < 0)
+		{
+			ballDir = 0;
+			theBall.setPosition(sf::Vector2f(0, theBall.getPosition().y));
+		}
+		if (theBall.getPosition().y + 2*theBall.getRadius() > window->getSize().y)
+		{
+			ballDir = 2;
+			theBall.setPosition(sf::Vector2f(theBall.getPosition().x, window->getSize().y - 2*theBall.getRadius()));
+		}
+		break;
+
+	case 2://Up Left
+		theBall.setPosition(sf::Vector2f(theBall.getPosition().x - ballMove, theBall.getPosition().y - ballMove));
+		if (theBall.getPosition().x < 0)
+		{
+			ballDir = 3;
+			theBall.setPosition(sf::Vector2f(0, theBall.getPosition().y));
+		}
+		if (theBall.getPosition().y < 0)
+		{
+			ballDir = 1;
+			theBall.setPosition(sf::Vector2f(theBall.getPosition().x, 0));
+		}
+		break;
+
+	case 3://Up Right
+		theBall.setPosition(sf::Vector2f(theBall.getPosition().x + ballMove, theBall.getPosition().y - ballMove));
+		if (theBall.getPosition().x + 2*theBall.getRadius() > window->getSize().x)
+		{
+			ballDir = 2;
+			theBall.setPosition(sf::Vector2f(window->getSize().x - 2*theBall.getRadius(), theBall.getPosition().y));
+		}
+		if (theBall.getPosition().y < 0)
+		{
+			ballDir = 0;
+			theBall.setPosition(sf::Vector2f(theBall.getPosition().x, 0));
+		}
+		break;
+	}
 }
 
 // Render level
@@ -126,6 +204,7 @@ void Level::render()
 	beginDraw();
 	window->draw(rectangle);
 	window->draw(playerCircle);
+	window->draw(theBall);
 	endDraw();
 }
 
