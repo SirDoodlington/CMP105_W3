@@ -25,7 +25,10 @@ private:
 	Input* input;
 
 	sf::RectangleShape rectangle;
+	sf::CircleShape playerCircle;
 	float speed;
 	float movement;
 	int direction;
+	int circHori;
+	int circVert;
 };
